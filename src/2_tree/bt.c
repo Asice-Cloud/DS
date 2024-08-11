@@ -71,7 +71,7 @@ tree delete_node(int data, tree t)
         t = t->left;
         free(temp);
       }
-      else
+      else // 采用惰性删除，将右子树的最小值替换当前节点，然后删除右子树的最小值
       {
         tree temp = t->right;
         while (temp->left != NULL)

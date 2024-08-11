@@ -120,6 +120,23 @@ void Tree<T>::insert(T data){
     }
 }
 
+/*  递归实现
+template<class T>
+void Tree<T>::insert(node<T> **t,T data){
+    if(*t==nullptr){
+        *t = new node<T>;
+        (*t)->data = data;
+        (*t)->left = nullptr;
+        (*t)->right = nullptr;
+    }else{
+        if(data < (*t)->data)
+            insert(&((*t)->left),data);
+        else
+            insert(&((*t)->right),data);
+    }
+}
+*/
+
 template<class T>
 std::pair<T, node<T>*> Tree<T>::search(T data){
     node<T> *curr = root;
