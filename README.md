@@ -16,13 +16,13 @@
 > 
 > - details:
 > 
-> - [x]    Red-Black tree and list(bucket) implement to store data;
+> - [x] Red-Black tree and list(bucket) implement to store data;
 > 
-> - [x]    auto treeify or untreeify the bucket based on different volumn of data;
+> - [x] auto treeify or untreeify the bucket based on different volumn of data;
 > 
-> - [x]    auto expand capacity when size scale more than load factor(0.75)
+> - [x] auto expand capacity when size scale more than load factor(0.75);
 > 
-> - [x]    make it safe for multiple thread
+> - [x] make it safe for multiple thread;
 
     
 
