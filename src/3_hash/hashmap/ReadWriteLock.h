@@ -1,7 +1,3 @@
-//
-// Created by asice-cloud on 24-8-12.
-//
-
 #include <shared_mutex>
 
 class ReadWriteLock {

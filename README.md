@@ -6,23 +6,20 @@
 
 ##### -- DOING --
 
-**3.Hash :** sloutions of hash conflicts, 
+**3.Hash :** solutions of hash conflicts,
+
+    (by the way, hash is easy for mathematical expert)
 
 > **3.5. Practice:**  ***Hash Map by cpp*** :
-> 
+>
 > - This will try to implement hash map like Java;
-> 
 > - basic function: put, get, remove, getSize, isEmpty;
-> 
 > - details:
-> 
-> - [x] Red-Black tree and list(bucket) implement to store data;
-> 
-> - [x] auto treeify or untreeify the bucket based on different volumn of data;
-> 
-> - [x] auto expand capacity when size scale more than load factor(0.75);
-> 
-> - [x] make it safe for multiple thread;
+>
+> - [X] Red-Black tree and list(bucket) implement to store data;
+> - [X] auto treeify or untreeify the bucket based on different volumn of data;
+> - [X] auto expand capacity when size scale more than load factor(0.75);
+> - [X] make it safe for multiple thread;
 
     
 
