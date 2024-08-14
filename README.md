@@ -4,13 +4,11 @@
 
 **2.Tree :** binary, avl, splay, Btree
 
-##### -- DOING --
+**3.Hash :** solutions of hash conflicts
 
-**3.Hash :** solutions of hash conflicts,
+    (by the way, hash is easy for mathematical expert, so that we just implement with c language)
 
-    (by the way, hash is easy for mathematical expert)
-
-> **3.5. Practice:**  ***Hash Map by cpp*** :
+> **3.5. Practice:**  ***Hash Map by cpp*** : (what a fucking hard work)
 >
 > - This will try to implement hash map like Java;
 > - basic function: put, get, remove, getSize, isEmpty;
@@ -22,5 +20,7 @@
 > - [X] make it safe for multiple thread;
 
     
+
+**4.Heap :**  binary heap, d heap, leftist heap ...
 
 ##### -- TODO --
