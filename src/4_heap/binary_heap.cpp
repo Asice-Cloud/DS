@@ -1,17 +1,19 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <utility> // for std::pair
+#include <vector>
 using namespace std;
 
-struct binary_heap
+class binary_heap
 {
-    vector<int> array;
+  public:
+    vector<pair<int, int>> array; // 使用pair来存储优先级和数据
     int capacity;
     int size;
 };
 
 class PriorityQueue
 {
-public:
+  public:
     binary_heap *H;
     PriorityQueue(int MaxElements)
     {
@@ -19,7 +21,7 @@ public:
         H->array.resize(MaxElements + 1);
         H->capacity = MaxElements;
         H->size = 0;
-        H->array[0] = -1;
+        H->array[0] = make_pair(-1, -1); // 哨兵元素
     }
 
     bool isEmpty()
@@ -32,7 +34,7 @@ public:
         return H->size == H->capacity;
     }
 
-    void insert(int x)
+    void insert(int priority, int value)
     {
         int i;
         if (isFull())
@@ -40,67 +42,55 @@ public:
             cout << "Priority queue is full\n";
             return;
         }
-        for (i = ++H->size; H->array[i / 2] > x; i /= 2)
+
+        // Percolate up
+        for (i = ++H->size; H->array[i / 2].first > priority; i /= 2)
+        {
             H->array[i] = H->array[i / 2];
-        H->array[i] = x;
+        }
+        H->array[i] = make_pair(priority, value);
     }
 
-    int delete_min()
+    pair<int, int> deleteMin()
     {
-        int i, child;
-        int min, last;
         if (isEmpty())
         {
             cout << "Priority queue is empty\n";
-            return -1;
+            return make_pair(-1, -1);
         }
-        min = H->array[1];
-        last = H->array[H->size--];
+
+        pair<int, int> minElement = H->array[1];
+        pair<int, int> lastElement = H->array[H->size--];
+
+        int i, child;
         for (i = 1; i * 2 <= H->size; i = child)
         {
             child = i * 2;
-            if (child != H->size && H->array[child + 1] < H->array[child])
+            if (child != H->size && H->array[child + 1].first < H->array[child].first)
                 child++;
-            if (last > H->array[child])
+            if (lastElement.first > H->array[child].first)
                 H->array[i] = H->array[child];
             else
                 break;
         }
-        H->array[i] = last;
-        return min;
-    }
+        H->array[i] = lastElement;
 
-    ~PriorityQueue()
-    {
-        delete H;
-    }
-
-    void print()
-    {
-        for (int i = 1; i <= H->size; i++)
-            cout << H->array[i] << " ";
-        cout << endl;
+        return minElement;
     }
 };
 
 int main()
 {
     PriorityQueue pq(10);
-    pq.insert(50);
-    pq.insert(60);
-    pq.insert(10);
-    pq.insert(20);
-    pq.insert(30);
-    pq.insert(40);
-    pq.insert(100);
-    pq.insert(110);
-    pq.insert(70);
-    pq.insert(80);
-    pq.insert(90);
-    pq.print();
-    cout << pq.delete_min() << endl;
-    cout << pq.delete_min() << endl;
-    pq.print();
+    pq.insert(3, 100);
+    pq.insert(1, 200);
+    pq.insert(2, 300);
+
+    while (!pq.isEmpty())
+    {
+        pair<int, int> minElement = pq.deleteMin();
+        cout << "Priority: " << minElement.first << ", Value: " << minElement.second << endl;
+    }
 
     return 0;
 }
