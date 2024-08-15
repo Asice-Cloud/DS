@@ -21,6 +21,6 @@
 
     
 
-**4.Heap :**  binary heap, d heap, leftist heap ...
+**4.Heap :**  binary heap(priority queue), d heap, leftist heap, skew heap ...
 
 ##### -- TODO --
