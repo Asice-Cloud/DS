@@ -6,7 +6,7 @@
 
 **3.Hash :** solutions of hash conflicts
 
-    (by the way, hash is easy for mathematical expert, so that we just implement with c language)
+    (by the way, hash is easy for mathematical learner, so that we just implement with c language)
 
 > **3.5. Practice:**  ***Hash Map by cpp*** : (what a fucking hard work)
 >
