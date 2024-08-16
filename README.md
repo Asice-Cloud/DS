@@ -1,6 +1,6 @@
 ## 1.Some interesting algorithm solutions
 
-    **1! 5!**	 (I got nothing to smoke, 小马都无力去测)
+   **1! 5! :**	 (I got nothing to smoke, 小马都无力去测)
 
 ## 2.All implement about data structure Both C and CPP
 
