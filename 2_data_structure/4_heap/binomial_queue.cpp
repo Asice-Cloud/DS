@@ -149,7 +149,7 @@ class BinomialQueue
 int main()
 {
     BinomialQueue *queue = new BinomialQueue();
-    for (int i = 1; i < 20; i++)
+    for (int i = 1; i < 100; i++)
     {
         queue->insert(i);
     }
