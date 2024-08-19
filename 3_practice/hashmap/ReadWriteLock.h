@@ -1,24 +1,35 @@
-#include <shared_mutex>
 
+#include <mutex>
+#include <condition_variable>
 class ReadWriteLock {
+private:
+    std::mutex mtx;
+    std::condition_variable cv;
+    int readers = 0;
+    bool writer = false;
+
 public:
     void lockRead() {
-        mutex_.lock_shared();
+        std::unique_lock<std::mutex> lock(mtx);
+        cv.wait(lock, [this]() { return !writer; });
+        readers++;
     }
 
     void unlockRead() {
-        mutex_.unlock_shared();
+        std::lock_guard<std::mutex> lock(mtx);
+        readers--;
+        if (readers == 0) cv.notify_all();
     }
 
     void lockWrite() {
-        mutex_.lock();
+        std::unique_lock<std::mutex> lock(mtx);
+        cv.wait(lock, [this]() { return !writer && readers == 0; });
+        writer = true;
     }
 
     void unlockWrite() {
-        mutex_.unlock();
+        std::lock_guard<std::mutex> lock(mtx);
+        writer = false;
+        cv.notify_all();
     }
-
-private:
-    std::shared_mutex mutex_;
 };
-

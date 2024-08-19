@@ -39,11 +39,12 @@ void normal_testHashMap() {
     }
 
     // 测试大量插入以触发树化和扩容
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1000; i++) {
         map.put("key" + std::to_string(i), i);
     }
 
-    std::cout << "Size after adding 100 elements: " << map.getSize() << std::endl;
+    std::cout << "Size after adding 1000 elements: " << map.getSize() << std::endl;
+    std::cout<<"This map's status is: "<<map.isTree()<<std::endl;
 
     // 测试获取不存在的键
     if (!map.get("nonexistent", value)) {

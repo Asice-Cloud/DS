@@ -25,6 +25,5 @@
 - details:
 
 - [X] Red-Black tree and list(bucket) implement to store data;
-- [X] auto treeify or untreeify the bucket based on different volumn of data;
 - [X] auto expand capacity when size scale more than load factor(0.75);
 - [X] make it safe for multiple thread;
