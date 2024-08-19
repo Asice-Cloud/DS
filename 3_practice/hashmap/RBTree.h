@@ -1,3 +1,4 @@
+#pragma once
 #include <functional>
 using namespace std;
 
@@ -130,16 +131,14 @@ void RBTree<K, V>::deleteFixup(RBNode<K, V>* x) {
                 x = x->parent;
             } else {
                 if (w->right == nullptr || w->right->color == Color::BLACK) {
-                    if (w->left != nullptr)
-                        w->left->color = Color::BLACK;
+                    if (w->left != nullptr) w->left->color = Color::BLACK;
                     w->color = Color::RED;
                     rightRotate(w);
                     w = x->parent->right;
                 }
                 w->color = x->parent->color;
                 x->parent->color = Color::BLACK;
-                if (w->right != nullptr)
-                    w->right->color = Color::BLACK;
+                if (w->right != nullptr) w->right->color = Color::BLACK;
                 leftRotate(x->parent);
                 x = root;
             }
@@ -157,23 +156,20 @@ void RBTree<K, V>::deleteFixup(RBNode<K, V>* x) {
                 x = x->parent;
             } else {
                 if (w->left == nullptr || w->left->color == Color::BLACK) {
-                    if (w->right != nullptr)
-                        w->right->color = Color::BLACK;
+                    if (w->right != nullptr) w->right->color = Color::BLACK;
                     w->color = Color::RED;
                     leftRotate(w);
                     w = x->parent->left;
                 }
                 w->color = x->parent->color;
                 x->parent->color = Color::BLACK;
-                if (w->left != nullptr)
-                    w->left->color = Color::BLACK;
+                if (w->left != nullptr) w->left->color = Color::BLACK;
                 rightRotate(x->parent);
                 x = root;
             }
         }
     }
-    if (x != nullptr)
-        x->color = Color::BLACK;
+    if (x != nullptr) x->color = Color::BLACK;
 }
 
 template<typename K, typename V>
@@ -214,13 +210,8 @@ void RBTree<K, V>::insert(const K& key, const V& value) {
         y = x;
         if (z->key < x->key)
             x = x->left;
-        else if (x->key < z->key)
+        else
             x = x->right;
-        else {
-            x->value = value;  // Update value if key already exists
-            delete z;
-            return;
-        }
     }
 
     z->parent = y;
@@ -239,13 +230,13 @@ template<typename K, typename V>
 bool RBTree<K, V>::find(const K& key, V& value) const {
     RBNode<K, V>* x = root;
     while (x != nullptr) {
-        if (key < x->key)
-            x = x->left;
-        else if (x->key < key)
-            x = x->right;
-        else {
+        if (key == x->key) {
             value = x->value;
             return true;
+        } else if (key < x->key) {
+            x = x->left;
+        } else {
+            x = x->right;
         }
     }
     return false;
@@ -255,12 +246,13 @@ template<typename K, typename V>
 bool RBTree<K, V>::remove(const K& key) {
     RBNode<K, V>* z = root;
     while (z != nullptr) {
-        if (key < z->key)
-            z = z->left;
-        else if (z->key < key)
-            z = z->right;
-        else
+        if (key == z->key) {
             break;
+        } else if (key < z->key) {
+            z = z->left;
+        } else {
+            z = z->right;
+        }
     }
     if (z == nullptr)
         return false;
@@ -279,9 +271,9 @@ bool RBTree<K, V>::remove(const K& key) {
         y = minimum(z->right);
         y_original_color = y->color;
         x = y->right;
-        if (y->parent == z)
-            x->parent = y;
-        else {
+        if (y->parent == z) {
+            if (x != nullptr) x->parent = y;
+        } else {
             transplant(y, y->right);
             y->right = z->right;
             y->right->parent = y;
@@ -291,11 +283,9 @@ bool RBTree<K, V>::remove(const K& key) {
         y->left->parent = y;
         y->color = z->color;
     }
-
+    delete z;
     if (y_original_color == Color::BLACK)
         deleteFixup(x);
-
-    delete z;
     size--;
     return true;
 }
