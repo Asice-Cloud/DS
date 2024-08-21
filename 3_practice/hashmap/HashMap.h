@@ -1,24 +1,23 @@
 #pragma once
-#include <list>
 #include "RBTree.h"
-#include <vector>
-#include <functional>
-#include <iostream>
 #include "ReadWriteLock.h"
+#include <functional>
+#include <list>
+#include <vector>
 
-template<typename K, typename V>
-struct SafeBucket {
-    enum class Type { LIST, TREE } type;
-    std::list<std::pair<K, V>>* list;
-    RBTree<K, V>* tree;
+template <typename K, typename V> struct Bucket {
+  //enum class Type { LIST, TREE } type;
+  //std::list<std::pair<K, V>> *list;
+  RBTree<K, V> *tree;
 
-    SafeBucket() : type(Type::LIST), list(new std::list<std::pair<K, V>>()), tree(nullptr) {}
-    ~SafeBucket() {
-        delete list;
-        delete tree;
-    }
+  Bucket()
+      : //type(Type::LIST), list(new std::list<std::pair<K, V>>()),
+        tree(new RBTree<K, V>()) {}
+  ~Bucket() {
+    //delete list;
+    delete tree;
+  }
 };
-
 
 template<typename K, typename V>
 class HashMap {
@@ -26,7 +25,7 @@ private:
     static const size_t INITIAL_CAPACITY = 16;
     static constexpr double LOAD_FACTOR = 0.75;
 
-    std::vector<SafeBucket<K, V>> buckets;
+    std::vector<Bucket<K, V>> buckets;
     size_t size;
     size_t capacity;
     mutable ReadWriteLock rwLock;
@@ -41,7 +40,6 @@ private:
 
 public:
     HashMap() : buckets(INITIAL_CAPACITY), size(0), capacity(INITIAL_CAPACITY) {}
-
     void put(const K& key, const V& value);
     bool get(const K& key, V& value) const;
     bool remove(const K& key);
@@ -67,14 +65,11 @@ void HashMap<K, V>::put(const K& key, const V& value) {
     }
 
     size_t h = hash(key);
-    SafeBucket<K, V>& bucket = buckets[h];
+    Bucket<K, V>& bucket = buckets[h];
     V oldValue;
-    if (bucket.tree != nullptr && bucket.tree->find(key, oldValue)) {
+    if (bucket.tree->find(key, oldValue)) {
         bucket.tree->remove(key);
         size--;
-    }
-    if (bucket.tree == nullptr) {
-        bucket.tree = new RBTree<K, V>();
     }
     bucket.tree->insert(key, value);
     size++;
@@ -85,8 +80,8 @@ template<typename K, typename V>
 bool HashMap<K, V>::get(const K& key, V& value) const {
     rwLock.lockRead();
     size_t h = hash(key);
-    const SafeBucket<K, V>& bucket = buckets[h];
-    bool found = bucket.tree != nullptr && bucket.tree->find(key, value);
+    const Bucket<K, V>& bucket = buckets[h];
+    bool found = bucket.tree->find(key, value);
     rwLock.unlockRead();
     return found;
 }
@@ -95,8 +90,8 @@ template<typename K, typename V>
 bool HashMap<K, V>::remove(const K& key) {
     rwLock.lockWrite();
     size_t h = hash(key);
-    SafeBucket<K, V>& bucket = buckets[h];
-    bool removed = bucket.tree != nullptr && bucket.tree->remove(key);
+    Bucket<K, V>& bucket = buckets[h];
+    bool removed = bucket.tree->remove(key);
     if (removed) {
         size--;
     }
@@ -108,20 +103,13 @@ template<typename K, typename V>
 void HashMap<K, V>::resize() {
     size_t oldCapacity = capacity;
     capacity *= 2;
-    std::vector<SafeBucket<K, V>> newBuckets(capacity);
+    std::vector<Bucket<K, V>> newBuckets(capacity);
 
     for (auto& oldBucket : buckets) {
-        if (oldBucket.type == SafeBucket<K, V>::Type::LIST) {
-            for (const auto& pair : *oldBucket.list) {
-                size_t newHash = hash(pair.first);
-                newBuckets[newHash].list->emplace_back(pair);
-            }
-        } else {
-            oldBucket.tree->inorderTraversal([this, &newBuckets](const K& key, const V& value) {
-                size_t newHash = hash(key);
-                newBuckets[newHash].tree->insert(key, value);
-            });
-        }
+        oldBucket.tree->inorderTraversal([this, &newBuckets](const K& key, const V& value) {
+            size_t newHash = hash(key);
+            newBuckets[newHash].tree->insert(key, value);
+        });
     }
 
     buckets = std::move(newBuckets);
